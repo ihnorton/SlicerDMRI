@@ -229,6 +229,8 @@ void qSlicerTractographyInteractiveSeedingModuleWidget::setup()
   QObject::connect(d->FiberNodeSelector, SIGNAL(currentNodeChanged(vtkMRMLNode*)), this,
                                          SLOT(setFiberBundleNode(vtkMRMLNode*)));
 
+  QObject::connect(d->ApplyLabelMapUpdate, SIGNAL(clicked(bool)), this,
+                                           SLOT(updateOnce()));
   QObject::connect(d->PresetsComboBox,
                 SIGNAL(currentIndexChanged(int)),
                 SLOT(setParametersPreset(int)));
@@ -304,18 +306,6 @@ void qSlicerTractographyInteractiveSeedingModuleWidget::setup()
   QObject::connect(d->UseIndexSpaceCheckBox,
                 SIGNAL(stateChanged(int)),
                 SLOT(setUseIndexSpace(int)));
-
-  QObject::connect(d->WriteFibersCheckBox,
-                SIGNAL(stateChanged(int)),
-                SLOT(setWriteFibers(int)));
-
-  QObject::connect(d->OutputDirectoryButton,
-                SIGNAL(directorySelected(const QString &)),
-                SLOT(setDirectory(const QString &)));
-
-  QObject::connect(d->FilePrefixLineEdit,
-                SIGNAL(textChanged(const QString &)),
-                SLOT(setFilePrefix(const QString &)));
 
   QObject::connect(d->ParameterNodeSelector, SIGNAL(currentNodeChanged(vtkMRMLNode*)), this,
                                              SLOT(setTractographyInteractiveSeedingNode(vtkMRMLNode*)));
@@ -452,11 +442,20 @@ void qSlicerTractographyInteractiveSeedingModuleWidget::setSeedingNode(vtkMRMLNo
     return;
     }
 
+  if (!node)
+    {
+    d->stackedWidget->setEnabled(false);
+    return;
+    }
+
   if (vtkMRMLScalarVolumeNode::SafeDownCast(d->FiducialNodeSelector->currentNode()) != 0)
     {
+    // fiducial seeding
+    d->stackedWidget->setEnabled(true);
     d->stackedWidget->setCurrentIndex(1);
+    this->setEnableSeeding(d->EnableSeedingCheckBox->isChecked());
 
-    // set defult label value in UI
+    // set default label value in UI
     vtkMRMLScalarVolumeNode *labelsVolume = vtkMRMLScalarVolumeNode::SafeDownCast(d->FiducialNodeSelector->currentNode());
     if (labelsVolume && labelsVolume->GetImageData())
       {
@@ -475,13 +474,16 @@ void qSlicerTractographyInteractiveSeedingModuleWidget::setSeedingNode(vtkMRMLNo
     }
   else
     {
+    // labelmap seeding
+    d->stackedWidget->setEnabled(true);
     d->stackedWidget->setCurrentIndex(0);
+    this->setEnableSeeding(false);
     }
 
   if (this->TractographyInteractiveSeedingNode)
     {
     this->TractographyInteractiveSeedingNode->SetInputFiducialRef(node ?
-                                                               node->GetID() : "" );
+                                                                  node->GetID() : "" );
     vtkSlicerTractographyInteractiveSeedingLogic *seedingLogic =
           vtkSlicerTractographyInteractiveSeedingLogic::SafeDownCast(this->logic());
     if (seedingLogic && this->mrmlScene())
@@ -632,15 +634,12 @@ void qSlicerTractographyInteractiveSeedingModuleWidget::updateWidgetFromMRML()
     d->UseIndexSpaceCheckBox->setChecked(paramNode->GetUseIndexSpace());
     d->LinearMeasureStartSlider->setValue(paramNode->GetLinearMeasureStart());
     d->SeedSpacingSlider->setValue(paramNode->GetSeedSpacing());
-    d->WriteFibersCheckBox->setChecked(paramNode->GetWriteToFile());
-    d->FilePrefixLineEdit->setText(paramNode->GetFilePrefix());
-    d->OutputDirectoryButton->setDirectory(paramNode->GetFileDirectoryName());
 
     d->ParameterNodeSelector->setCurrentNode(
       this->mrmlScene()->GetNodeByID(paramNode->GetID()));
     d->FiberNodeSelector->setCurrentNode(
       this->mrmlScene()->GetNodeByID(paramNode->GetOutputFiberRef()));
-    d->FiducialNodeSelector->setCurrentNode(
+    this->setSeedingNode(
       this->mrmlScene()->GetNodeByID(paramNode->GetInputFiducialRef()));
     d->DTINodeSelector->setCurrentNode(
       this->mrmlScene()->GetNodeByID(paramNode->GetInputVolumeRef()));
@@ -805,29 +804,14 @@ void qSlicerTractographyInteractiveSeedingModuleWidget::setLinearMeasureStart(do
 }
 
 //-----------------------------------------------------------------------------
-void qSlicerTractographyInteractiveSeedingModuleWidget::setWriteFibers(int value)
+void qSlicerTractographyInteractiveSeedingModuleWidget::updateOnce()
 {
-  if (this->TractographyInteractiveSeedingNode)
-    {
-    this->TractographyInteractiveSeedingNode->SetWriteToFile(value);
-    }
-}
 
-
-//-----------------------------------------------------------------------------
-void qSlicerTractographyInteractiveSeedingModuleWidget::setDirectory(const QString &value)
-{
-  if (this->TractographyInteractiveSeedingNode)
+  if (this->TractographyInteractiveSeedingNode && this->logic())
     {
-    this->TractographyInteractiveSeedingNode->SetFileDirectoryName(value.toLatin1());
-    }
-}
-
-//-----------------------------------------------------------------------------
-void qSlicerTractographyInteractiveSeedingModuleWidget::setFilePrefix(const QString &value)
-{
-  if (this->TractographyInteractiveSeedingNode)
-    {
-    this->TractographyInteractiveSeedingNode->SetFilePrefix(value.toLatin1());
+    vtkSlicerTractographyInteractiveSeedingLogic* logic =
+           vtkSlicerTractographyInteractiveSeedingLogic::SafeDownCast(this->logic());
+    if (logic)
+      logic->UpdateOnce();
     }
 }
