@@ -296,24 +296,24 @@ bool vtkSlicerFiberBundleLogic::SetPolyDataTensors(vtkMRMLFiberBundleNode *fiber
     vtkMRMLFiberBundleDisplayNode *dnode = fiberBundleNode->GetLineDisplayNode();
     if (dnode)
       {
-      vtkDataArray *da = dnode->GetInputPolyData()->GetPointData()->GetArray(tensors->GetName());
-      dnode->GetInputPolyData()->GetPointData()->SetTensors(da);
+      vtkDataArray *da = dnode->GetInputMesh()->GetPointData()->GetArray(tensors->GetName());
+      dnode->GetInputMesh()->GetPointData()->SetTensors(da);
 
       dnode->SetActiveTensorName(tensors->GetName());
       }
     dnode = fiberBundleNode->GetTubeDisplayNode();
     if (dnode)
       {
-      vtkDataArray *da = dnode->GetInputPolyData()->GetPointData()->GetArray(tensors->GetName());
-      dnode->GetInputPolyData()->GetPointData()->SetTensors(da);
+      vtkDataArray *da = dnode->GetInputMesh()->GetPointData()->GetArray(tensors->GetName());
+      dnode->GetInputMesh()->GetPointData()->SetTensors(da);
 
       dnode->SetActiveTensorName(tensors->GetName());
       }
     dnode = fiberBundleNode->GetGlyphDisplayNode();
     if (dnode)
       {
-      vtkDataArray *da = dnode->GetInputPolyData()->GetPointData()->GetArray(tensors->GetName());
-      dnode->GetInputPolyData()->GetPointData()->SetTensors(da);
+      vtkDataArray *da = dnode->GetInputMesh()->GetPointData()->GetArray(tensors->GetName());
+      dnode->GetInputMesh()->GetPointData()->SetTensors(da);
 
       dnode->SetActiveTensorName(tensors->GetName());
       }

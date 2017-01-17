@@ -449,7 +449,7 @@ void vtkMRMLFiberBundleNode
 ::SetPolyDataToDisplayNode(vtkMRMLModelDisplayNode* modelDisplayNode)
 {
   assert(modelDisplayNode->IsA("vtkMRMLFiberBundleDisplayNode"));
-  modelDisplayNode->SetInputPolyDataConnection(this->GetFilteredPolyDataConnection());
+  modelDisplayNode->SetInputMeshConnection(this->GetFilteredPolyDataConnection());
 }
 
 //----------------------------------------------------------------------------
@@ -475,7 +475,7 @@ void vtkMRMLFiberBundleNode::SetSelectWithAnnotationNode(int _arg)
   if (this->SelectWithAnnotationNode != _arg)
     {
     this->SelectWithAnnotationNode = _arg;
-    this->SetPolyDataToDisplayNodes();
+    this->SetMeshToDisplayNodes();
     this->Modified();
     }
 }

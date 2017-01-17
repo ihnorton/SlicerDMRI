@@ -253,13 +253,13 @@ void qSlicerTractographyDisplayWidget::setFiberBundleDisplayNode(vtkMRMLFiberBun
       (d->FiberBundleDisplayNode->GetActiveTensorName() == 0 ||
       std::string(d->FiberBundleDisplayNode->GetActiveTensorName()) == ""))
     {
-    if (d->FiberBundleDisplayNode->GetInputPolyData() &&
-        d->FiberBundleDisplayNode->GetInputPolyData()->GetPointData() &&
-        d->FiberBundleDisplayNode->GetInputPolyData()->GetPointData()->GetTensors() )
+    if (d->FiberBundleDisplayNode->GetInputMesh() &&
+        d->FiberBundleDisplayNode->GetInputMesh()->GetPointData() &&
+        d->FiberBundleDisplayNode->GetInputMesh()->GetPointData()->GetTensors() )
       {
       this->m_updating = 1;
       d->FiberBundleDisplayNode->SetActiveTensorName(
-        d->FiberBundleDisplayNode->GetInputPolyData()->GetPointData()->GetTensors()->GetName());
+        d->FiberBundleDisplayNode->GetInputMesh()->GetPointData()->GetTensors()->GetName());
       this->m_updating = 0;
       }
     }
@@ -654,7 +654,7 @@ void qSlicerTractographyDisplayWidget::updateScalarRange()
 {
   Q_D(qSlicerTractographyDisplayWidget);
 
-  if ( !d->FiberBundleNode || !d->FiberBundleDisplayNode || !d->FiberBundleDisplayNode->GetOutputPolyData())
+  if ( !d->FiberBundleNode || !d->FiberBundleDisplayNode || !d->FiberBundleDisplayNode->GetOutputMesh())
     {
     return;
     }
@@ -665,7 +665,7 @@ void qSlicerTractographyDisplayWidget::updateScalarRange()
 
   if (d->FiberBundleDisplayNode->GetVisibility() )
     {
-    d->FiberBundleDisplayNode->GetOutputPolyDataConnection()->GetProducer()->Update();
+    d->FiberBundleDisplayNode->GetOutputMeshConnection()->GetProducer()->Update();
     }
   d->FiberBundleDisplayNode->GetScalarRange(range);
   if (d->FiberBundleDisplayNode->GetAutoScalarRange())
@@ -722,7 +722,7 @@ void qSlicerTractographyDisplayWidget::updateWidgetFromMRML()
   bool wasBlocking = d->ActiveTensorComboBox->blockSignals(true);
 
   QStringList tensorItems;
-  d->getPolyDataTensors(d->FiberBundleDisplayNode->GetInputPolyData(), tensorItems);
+  d->getPolyDataTensors(vtkPolyData::SafeDownCast(d->FiberBundleDisplayNode->GetInputMesh()), tensorItems);
   d->ActiveTensorComboBox->clear();
   d->ActiveTensorComboBox->addItems(tensorItems);
 

@@ -276,12 +276,12 @@ void vtkMRMLFiberBundleDisplayNode::UpdatePolyDataPipeline()
 {
   if (this->GetColorMode ( ) == vtkMRMLFiberBundleDisplayNode::colorModeScalarData)
     {
-    this->Superclass::UpdatePolyDataPipeline();
+    this->Superclass::UpdateMeshPipeline();
     }
   else if (this->GetActiveTensorName() &&
       std::string(this->GetActiveTensorName()) != std::string("") &&
-      this->GetInputPolyData() &&
-      this->GetInputPolyData()->GetPointData() )
+      this->GetInputMesh() &&
+      this->GetInputMesh()->GetPointData() )
     {
       this->AssignAttribute->Assign(
         this->GetActiveTensorName(),

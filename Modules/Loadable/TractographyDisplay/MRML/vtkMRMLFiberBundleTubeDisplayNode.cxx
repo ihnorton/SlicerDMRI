@@ -41,7 +41,7 @@ vtkMRMLFiberBundleTubeDisplayNode::vtkMRMLFiberBundleTubeDisplayNode()
   this->ColorMode = vtkMRMLFiberBundleDisplayNode::colorModeScalar;
   this->ColorLinesByOrientation = vtkPolyDataColorLinesByOrientation::New();
   this->ColorLinesByOrientation->SetInputConnection(
-    this->Superclass::GetOutputPolyDataConnection());
+    this->Superclass::GetOutputMeshConnection());
 
   this->TubeFilter = vtkTubeFilter::New();
   this->TubeNumberOfSides = 6;
@@ -50,7 +50,7 @@ vtkMRMLFiberBundleTubeDisplayNode::vtkMRMLFiberBundleTubeDisplayNode()
   this->TubeFilter->SetNumberOfSides(this->GetTubeNumberOfSides());
   this->TubeFilter->SetRadius(this->GetTubeRadius());
   this->TubeFilter->SetInputConnection(
-    this->Superclass::GetOutputPolyDataConnection());
+    this->Superclass::GetOutputMeshConnection());
 
   this->TensorToColor = vtkPolyDataTensorToColor::New();
   this->TensorToColor->SetInputConnection(this->TubeFilter->GetOutputPort());
@@ -140,7 +140,7 @@ void vtkMRMLFiberBundleTubeDisplayNode::PrintSelf(ostream& os, vtkIndent indent)
 }
 
 //----------------------------------------------------------------------------
-vtkAlgorithmOutput* vtkMRMLFiberBundleTubeDisplayNode::GetOutputPolyDataConnection()
+vtkAlgorithmOutput* vtkMRMLFiberBundleTubeDisplayNode::GetOutputMeshConnection()
 {
   if (this->GetColorMode () == vtkMRMLFiberBundleDisplayNode::colorModeScalarData)
     {
@@ -155,9 +155,9 @@ void vtkMRMLFiberBundleTubeDisplayNode::UpdatePolyDataPipeline()
   this->Superclass::UpdatePolyDataPipeline();
 
   this->ColorLinesByOrientation->SetInputConnection(
-    this->Superclass::GetOutputPolyDataConnection());
+    this->Superclass::GetOutputMeshConnection());
   this->TubeFilter->SetInputConnection(
-    this->Superclass::GetOutputPolyDataConnection());
+    this->Superclass::GetOutputMeshConnection());
 
   if (!this->Visibility)
     {
@@ -181,9 +181,9 @@ void vtkMRMLFiberBundleTubeDisplayNode::UpdatePolyDataPipeline()
     {
     this->TensorToColor->SetExtractScalar(0); // force a copy of the data
     this->SetActiveScalarName("ClusterId");
-    if (this->GetInputPolyData()->GetCellData()->HasArray("ClusterId"))
+    if (this->GetInputMesh()->GetCellData()->HasArray("ClusterId"))
       {
-      this->GetInputPolyData()->GetCellData()->GetArray("ClusterId")->GetRange(this->ScalarRange);
+      this->GetInputMesh()->GetCellData()->GetArray("ClusterId")->GetRange(this->ScalarRange);
       }
     }
   else if (this->GetColorMode ( ) == vtkMRMLFiberBundleDisplayNode::colorModeMeanFiberOrientation)
@@ -331,10 +331,10 @@ void vtkMRMLFiberBundleTubeDisplayNode::UpdatePolyDataPipeline()
         vtkMRMLDiffusionTensorDisplayPropertiesNode::ScalarInvariantKnownScalarRange(
           scalarInvariant, range);
         }
-      else if (this->GetInputPolyData())
+      else if (this->GetInputMesh())
         {
-        this->GetOutputPolyDataConnection()->GetProducer()->Update();
-        vtkPointData *pointData = this->GetOutputPolyData()->GetPointData();
+        this->GetOutputMeshConnection()->GetProducer()->Update();
+        vtkPointData *pointData = this->GetOutputMesh()->GetPointData();
         if (pointData)
           {
           double *activeScalarRange = 0;
@@ -362,10 +362,10 @@ void vtkMRMLFiberBundleTubeDisplayNode::UpdatePolyDataPipeline()
             vtkMRMLDiffusionTensorDisplayPropertiesNode::ColorOrientation, range);
         }
     else if (this->GetColorMode() == vtkMRMLFiberBundleDisplayNode::colorModeScalarData &&
-             this->GetInputPolyData())
+             this->GetInputMesh())
       {
-      this->GetInputPolyDataConnection()->GetProducer()->Update();
-      vtkPointData *pointData = this->GetOutputPolyData()->GetPointData();
+      this->GetInputMeshConnection()->GetProducer()->Update();
+      vtkPointData *pointData = this->GetOutputMesh()->GetPointData();
       if (pointData &&
           pointData->GetArray(this->GetActiveScalarName()))
         {
