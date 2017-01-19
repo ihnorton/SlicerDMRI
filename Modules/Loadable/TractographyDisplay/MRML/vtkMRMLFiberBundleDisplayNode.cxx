@@ -272,11 +272,11 @@ void vtkMRMLFiberBundleDisplayNode::ProcessMRMLEvents ( vtkObject *caller,
 }
 
 //---------------------------------------------------------------------------
-void vtkMRMLFiberBundleDisplayNode::UpdatePolyDataPipeline()
+void vtkMRMLFiberBundleDisplayNode::UpdateAssignedAttribute()
 {
   if (this->GetColorMode ( ) == vtkMRMLFiberBundleDisplayNode::colorModeScalarData)
     {
-    this->Superclass::UpdatePolyDataPipeline();
+    this->Superclass::UpdateAssignedAttribute();
     }
   else if (this->GetActiveTensorName() &&
       std::string(this->GetActiveTensorName()) != std::string("") &&
