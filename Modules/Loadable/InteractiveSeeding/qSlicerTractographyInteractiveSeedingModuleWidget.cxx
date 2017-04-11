@@ -612,13 +612,14 @@ void qSlicerTractographyInteractiveSeedingModuleWidget::updateWidgetFromMRML()
     d->FiducialStepSpinBox->setValue(paramNode->GetSeedingRegionStep());
     d->SeedSelectedCheckBox->setChecked(paramNode->GetSeedSelectedFiducials()==1);
     d->StoppingCurvatureSpinBox->setValue(paramNode->GetStoppingCurvature());
-    d->StoppingCriteriaComboBox->setCurrentIndex(paramNode->GetThresholdMode());
     d->StoppingValueSpinBox->setValue(paramNode->GetStoppingValue());
     d->ROILabelInput->setText(paramNode->ROILabelsToString().c_str());
     d->RandomGridCheckBox->setChecked(paramNode->GetRandomGrid());
     d->UseIndexSpaceCheckBox->setChecked(paramNode->GetUseIndexSpace());
     d->StartThresholdSlider->setValue(paramNode->GetStartThreshold());
     d->SeedSpacingSlider->setValue(paramNode->GetSeedSpacing());
+
+    d->StoppingCriteriaComboBox->setCurrentIndex(paramNode->GetThresholdMode());
 
     { // Use enums for display mode
       QString target;
