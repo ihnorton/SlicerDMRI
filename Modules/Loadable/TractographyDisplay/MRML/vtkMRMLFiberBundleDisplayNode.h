@@ -34,7 +34,7 @@ class VTK_SLICER_TRACTOGRAPHYDISPLAY_MODULE_MRML_EXPORT vtkMRMLFiberBundleDispla
 {
  public:
   vtkTypeMacro(vtkMRMLFiberBundleDisplayNode, vtkMRMLModelDisplayNode);
-  void PrintSelf(ostream& os, vtkIndent indent);
+  void PrintSelf(ostream& os, vtkIndent indent) override;
 
   //--------------------------------------------------------------------------
   /// MRMLNode methods
@@ -42,24 +42,24 @@ class VTK_SLICER_TRACTOGRAPHYDISPLAY_MODULE_MRML_EXPORT vtkMRMLFiberBundleDispla
 
   ///
   /// Read node attributes from XML (MRML) file
-  virtual void ReadXMLAttributes ( const char** atts );
+  virtual void ReadXMLAttributes ( const char** atts ) override;
 
   ///
   /// Write this node's information to a MRML file in XML format.
-  virtual void WriteXML ( ostream& of, int indent );
+  virtual void WriteXML ( ostream& of, int indent ) override;
 
   ///
   /// Copy the node's attributes to this object
-  virtual void Copy ( vtkMRMLNode *node );
+  virtual void Copy ( vtkMRMLNode *node ) override;
 
   ///
   /// Get node XML tag name (like Volume, FiberBundle)
-  virtual const char* GetNodeTagName() = 0;
+  virtual const char* GetNodeTagName() override = 0;
 
   ///
   /// Updates this node if it depends on other nodes
   /// when the node is deleted in the scene
-  virtual void UpdateReferences();
+  virtual void UpdateReferences() override;
 
   ///
   /// Finds the storage node and read the data

@@ -18,11 +18,11 @@
 
 ==============================================================================*/
 
-#ifndef __vtkMRMLTractographyDisplayDisplayableManager_h
-#define __vtkMRMLTractographyDisplayDisplayableManager_h
+#ifndef __vtkMRMLFiberBundleInteractorDM_h
+#define __vtkMRMLFiberBundleInteractorDM_h
 
 // Tractography includes
-#include "vtkTractographyDisplayMRMLDMExport.h"
+#include "vtkMRMLFiberBundleInteractorDMExport.h"
 
 class vtkMRMLFiberBundleDisplayNode;
 class vtkMRMLFiberBundleNode;
@@ -34,27 +34,30 @@ class vtkMRMLFiberBundleNode;
 #include <vector>
 
 /// \ingroup Slicer_QtModules_Tractography
-class VTK_SLICER_TRACTOGRAPHYDISPLAY_MODULE_MRMLDM_EXPORT vtkMRMLTractographyDisplayDisplayableManager
+class VTK_SLICER_TRACTOGRAPHYDISPLAY_MODULE_MRMLDM_EXPORT vtkMRMLFiberBundleInteractorDM
   : public vtkMRMLAbstractThreeDViewDisplayableManager
 {
 public:
-  static vtkMRMLTractographyDisplayDisplayableManager *New();
-  vtkTypeMacro(vtkMRMLTractographyDisplayDisplayableManager, vtkMRMLAbstractThreeDViewDisplayableManager);
+  static vtkMRMLFiberBundleInteractorDM *New();
+  vtkTypeMacro(vtkMRMLFiberBundleInteractorDM, vtkMRMLAbstractThreeDViewDisplayableManager);
   void PrintSelf(ostream& os, vtkIndent indent);
 
   vtkGetMacro(EnableFiberEdit, int);
   vtkSetMacro(EnableFiberEdit, int);
 
 protected:
-  vtkMRMLTractographyDisplayDisplayableManager();
-  ~vtkMRMLTractographyDisplayDisplayableManager();
-  vtkMRMLTractographyDisplayDisplayableManager(const vtkMRMLTractographyDisplayDisplayableManager&);
-  void operator=(const vtkMRMLTractographyDisplayDisplayableManager&);
+  vtkMRMLFiberBundleInteractorDM();
+  ~vtkMRMLFiberBundleInteractorDM();
+  vtkMRMLFiberBundleInteractorDM(const vtkMRMLFiberBundleInteractorDM&);
+  void operator=(const vtkMRMLFiberBundleInteractorDM&);
 
   virtual int ActiveInteractionModes();
 
   virtual void SetMRMLSceneInternal(vtkMRMLScene* newScene);
   virtual void ProcessMRMLNodesEvents(vtkObject *caller, unsigned long event, void *callData);
+
+  virtual void OnMRMLSceneNodeAdded(vtkMRMLNode*);
+  virtual void OnMRMLSceneNodeRemoved(vtkMRMLNode*);
 
   virtual void OnInteractorStyleEvent(int eventId);
 

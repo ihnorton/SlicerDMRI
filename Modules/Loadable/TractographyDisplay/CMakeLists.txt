@@ -43,7 +43,7 @@ set(MODULE_TARGET_LIBRARIES
   vtkDMRI
   vtkSlicer${MODULE_NAME}ModuleLogic
   vtkSlicer${MODULE_NAME}ModuleMRML
-  vtk${MODULE_NAME}MRMLDM
+  vtkMRMLFiberBundleDM
   qSlicer${MODULE_NAME}ModuleWidgets
   ${MRML_LIBRARIES}
   )

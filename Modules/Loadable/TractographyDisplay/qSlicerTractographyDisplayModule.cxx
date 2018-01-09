@@ -38,7 +38,7 @@
 // DisplayableManager initialization
 #if Slicer_VERSION_MAJOR == 4 && Slicer_VERSION_MINOR >= 9
 #include <vtkAutoInit.h>
-VTK_MODULE_INIT(vtkTractographyDisplayMRMLDM)
+VTK_MODULE_INIT(vtkMRMLFiberBundleDM)
 #endif
 
 //-----------------------------------------------------------------------------
@@ -61,8 +61,9 @@ void qSlicerTractographyDisplayModule::setup()
   this->Superclass::setup();
 
   vtkMRMLThreeDViewDisplayableManagerFactory::GetInstance()->
-    RegisterDisplayableManager("vtkMRMLTractographyDisplayDisplayableManager");
-
+    RegisterDisplayableManager("vtkMRMLFiberBundleInteractorDM");
+  vtkMRMLThreeDViewDisplayableManagerFactory::GetInstance()->
+    RegisterDisplayableManager("vtkMRMLFiberBundle3DViewDM");
 
   vtkSlicerFiberBundleLogic* fiberBundleLogic =
     vtkSlicerFiberBundleLogic::SafeDownCast(this->logic());

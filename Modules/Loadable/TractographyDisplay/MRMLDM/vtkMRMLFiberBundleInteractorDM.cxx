@@ -19,7 +19,7 @@
 ==============================================================================*/
 
 // Slicer includes
-#include "vtkMRMLTractographyDisplayDisplayableManager.h"
+#include "vtkMRMLFiberBundleInteractorDM.h"
 
 
 // MRML includes
@@ -52,12 +52,12 @@
 //#include <itksys/Directory.hxx>
 
 //---------------------------------------------------------------------------
-vtkStandardNewMacro (vtkMRMLTractographyDisplayDisplayableManager);
+vtkStandardNewMacro (vtkMRMLFiberBundleInteractorDM);
 
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-vtkMRMLTractographyDisplayDisplayableManager::vtkMRMLTractographyDisplayDisplayableManager()
+vtkMRMLFiberBundleInteractorDM::vtkMRMLFiberBundleInteractorDM()
 {
   this->EnableFiberEdit = 0;
   this->SelectedFiberBundleNode = 0;
@@ -76,25 +76,25 @@ vtkMRMLTractographyDisplayDisplayableManager::vtkMRMLTractographyDisplayDisplaya
 }
 
 //---------------------------------------------------------------------------
-vtkMRMLTractographyDisplayDisplayableManager::~vtkMRMLTractographyDisplayDisplayableManager()
+vtkMRMLFiberBundleInteractorDM::~vtkMRMLFiberBundleInteractorDM()
 {
 }
 
 //---------------------------------------------------------------------------
-void vtkMRMLTractographyDisplayDisplayableManager::PrintSelf(std::ostream &os, vtkIndent indent)
+void vtkMRMLFiberBundleInteractorDM::PrintSelf(std::ostream &os, vtkIndent indent)
 {
   os<<indent<<"Print logic"<<endl;
 }
 
 //---------------------------------------------------------------------------
-int vtkMRMLTractographyDisplayDisplayableManager::ActiveInteractionModes()
+int vtkMRMLFiberBundleInteractorDM::ActiveInteractionModes()
 {
   return vtkMRMLInteractionNode::ViewTransform;
 }
 
 
 //---------------------------------------------------------------------------
-void vtkMRMLTractographyDisplayDisplayableManager::OnInteractorStyleEvent(int eventid)
+void vtkMRMLFiberBundleInteractorDM::OnInteractorStyleEvent(int eventid)
 {
   //if (eventid == vtkCommand::LeftButtonReleaseEvent && keyPressed)
   if (this->GetEnableFiberEdit() &&
@@ -215,7 +215,7 @@ void vtkMRMLTractographyDisplayDisplayableManager::OnInteractorStyleEvent(int ev
 }
 
 //---------------------------------------------------------------------------
-void vtkMRMLTractographyDisplayDisplayableManager::ClearSelectedFibers()
+void vtkMRMLFiberBundleInteractorDM::ClearSelectedFibers()
 {
   // unselect all selected fibers
   std::vector<vtkIdType> cellIDs;
@@ -230,7 +230,7 @@ void vtkMRMLTractographyDisplayDisplayableManager::ClearSelectedFibers()
 }
 
 //---------------------------------------------------------------------------
-void vtkMRMLTractographyDisplayDisplayableManager::DeleteSelectedFibers()
+void vtkMRMLFiberBundleInteractorDM::DeleteSelectedFibers()
 {
   std::vector<vtkIdType> cellIDs;
   std::map <vtkIdType, std::vector<double> >::iterator it;
@@ -244,7 +244,7 @@ void vtkMRMLTractographyDisplayDisplayableManager::DeleteSelectedFibers()
 
 //---------------------------------------------------------------------------
 vtkMRMLFiberBundleNode*
-vtkMRMLTractographyDisplayDisplayableManager::GetPickedFiber(vtkMRMLFiberBundleDisplayNode* displayNode,
+vtkMRMLFiberBundleInteractorDM::GetPickedFiber(vtkMRMLFiberBundleDisplayNode* displayNode,
                                                              vtkIdType pickedCell, vtkIdType &cellID)
 {
   cellID = -1;
@@ -284,7 +284,7 @@ vtkMRMLTractographyDisplayDisplayableManager::GetPickedFiber(vtkMRMLFiberBundleD
 }
 
 //---------------------------------------------------------------------------
-void vtkMRMLTractographyDisplayDisplayableManager::DeletePickedFibers(vtkMRMLFiberBundleNode *fiberBundleNode,
+void vtkMRMLFiberBundleInteractorDM::DeletePickedFibers(vtkMRMLFiberBundleNode *fiberBundleNode,
                                                                      std::vector<vtkIdType> &cellIDs)
 {
   if (!fiberBundleNode)
@@ -313,7 +313,7 @@ void vtkMRMLTractographyDisplayDisplayableManager::DeletePickedFibers(vtkMRMLFib
 }
 
 //---------------------------------------------------------------------------
-void vtkMRMLTractographyDisplayDisplayableManager::SelectPickedFibers(vtkMRMLFiberBundleNode *fiberBundleNode,
+void vtkMRMLFiberBundleInteractorDM::SelectPickedFibers(vtkMRMLFiberBundleNode *fiberBundleNode,
                                                                      std::vector<vtkIdType> &cellIDs)
 {
   if (!fiberBundleNode)
@@ -391,7 +391,7 @@ void vtkMRMLTractographyDisplayDisplayableManager::SelectPickedFibers(vtkMRMLFib
 }
 
 //---------------------------------------------------------------------------
-void vtkMRMLTractographyDisplayDisplayableManager::SetMRMLSceneInternal(vtkMRMLScene* newScene)
+void vtkMRMLFiberBundleInteractorDM::SetMRMLSceneInternal(vtkMRMLScene* newScene)
 {
 
   vtkMRMLInteractionNode *interactionNode = NULL;
@@ -417,9 +417,10 @@ void vtkMRMLTractographyDisplayDisplayableManager::SetMRMLSceneInternal(vtkMRMLS
 }
 
 //---------------------------------------------------------------------------
-void vtkMRMLTractographyDisplayDisplayableManager::ProcessMRMLNodesEvents
+void vtkMRMLFiberBundleInteractorDM::ProcessMRMLNodesEvents
        (vtkObject *caller, unsigned long event, void * vtkNotUsed(callData))
 {
+  assert(caller->IsA("vtkMRMLFiberBundleNode"));
 
   vtkMRMLInteractionNode * interactionNode = vtkMRMLInteractionNode::SafeDownCast(caller);
   if (interactionNode && event == vtkCommand::ModifiedEvent)
@@ -430,4 +431,14 @@ void vtkMRMLTractographyDisplayDisplayableManager::ProcessMRMLNodesEvents
     }
     this->SetEnableFiberEdit(interactionNode->GetEnableFiberEdit());
   }
+}
+
+void vtkMRMLFiberBundleInteractorDM::OnMRMLSceneNodeAdded(vtkMRMLNode* node)
+{
+  if (!node->IsA("vtkMRMLFiberBundleNode")) return;
+}
+
+void vtkMRMLFiberBundleInteractorDM::OnMRMLSceneNodeRemoved(vtkMRMLNode* node)
+{
+  if (!node->IsA("vtkMRMLFiberBundleNode")) return;
 }

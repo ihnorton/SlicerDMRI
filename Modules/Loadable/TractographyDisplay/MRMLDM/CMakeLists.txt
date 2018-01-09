@@ -1,4 +1,4 @@
-project(vtk${MODULE_NAME}MRMLDM)
+project(vtkMRMLFiberBundleDM)
 
 set(KIT ${PROJECT_NAME})
 
@@ -12,7 +12,8 @@ set(${KIT}_INCLUDE_DIRECTORIES
   )
 
 set(displayable_manager_SRCS
-  vtkMRMLTractographyDisplayDisplayableManager.cxx
+  vtkMRMLFiberBundle3DViewDM.cxx
+  vtkMRMLFiberBundleInteractorDM.cxx
   )
 
 SlicerConfigureDisplayableManagerObjectFactory(
