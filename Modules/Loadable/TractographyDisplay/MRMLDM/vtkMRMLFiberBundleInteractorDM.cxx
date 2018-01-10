@@ -420,8 +420,6 @@ void vtkMRMLFiberBundleInteractorDM::SetMRMLSceneInternal(vtkMRMLScene* newScene
 void vtkMRMLFiberBundleInteractorDM::ProcessMRMLNodesEvents
        (vtkObject *caller, unsigned long event, void * vtkNotUsed(callData))
 {
-  assert(caller->IsA("vtkMRMLFiberBundleNode"));
-
   vtkMRMLInteractionNode * interactionNode = vtkMRMLInteractionNode::SafeDownCast(caller);
   if (interactionNode && event == vtkCommand::ModifiedEvent)
   {
