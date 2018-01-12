@@ -77,16 +77,15 @@ class VTK_SLICER_TRACTOGRAPHYDISPLAY_MODULE_MRML_EXPORT vtkMRMLFiberBundleTubeDi
   vtkSetMacro ( TubeNumberOfSides , int );
   vtkGetMacro ( TubeNumberOfSides , int );
 
+  ///
+  /// Gets resultin glyph PolyData
+  virtual vtkAlgorithmOutput* GetOutputMeshConnection();
 
  protected:
   vtkMRMLFiberBundleTubeDisplayNode ( );
   ~vtkMRMLFiberBundleTubeDisplayNode ( );
   vtkMRMLFiberBundleTubeDisplayNode ( const vtkMRMLFiberBundleTubeDisplayNode& );
   void operator= ( const vtkMRMLFiberBundleTubeDisplayNode& );
-
-  ///
-  /// Gets resultin glyph PolyData
-  virtual vtkAlgorithmOutput* GetOutputMeshConnection();
 
   /// Enumerated
 
